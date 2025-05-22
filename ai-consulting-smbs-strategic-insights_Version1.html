@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Consulting for SMBs: Strategic Insights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* bg-slate-900 */
+            color: #E2E8F0; /* text-slate-200 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .kpi-card {
+            background-color: #1E293B; /* bg-slate-800 */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-big {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FB923C; /* text-orange-400 */
+        }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #F97316; /* text-orange-500 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-intro {
+            font-size: 1.125rem;
+            color: #FB923C; /* text-orange-400 */
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2.5rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #F97316; /* text-orange-500 */
+            margin-bottom: 0.75rem;
+        }
+        .card-text {
+            color: #CBD5E1; /* text-slate-300 */
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .primary-text { color: #F97316; } /* text-orange-500 */
+        .secondary-text { color: #FB923C; } /* text-orange-400 */
+        .highlight-text { color: #FB923C; } /* text-orange-400 */
+        .tier-card {
+            border: 2px solid #F97316; /* border-orange-500 */
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #F97316; /* text-orange-500 */
+            margin: 0 1rem;
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .flow-arrow {
+                display: inline-block;
+            }
+        }
+        .nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(30, 41, 59, 0.95); /* bg-slate-800/95 */
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        .nav-link {
+            color: #FB923C; /* text-orange-400 */
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: #F97316; /* bg-orange-500 */
+            color: #0F172A; /* text-slate-900 */
+        }
+        .hero-section {
+            background-color: #1E293B; /* bg-slate-800 */
+        }
+        .footer-section {
+            background-color: #1E293B; /* bg-slate-800 */
+        }
+        .gemini-input {
+            background-color: #334155; /* slate-700 */
+            color: #E2E8F0; /* slate-200 */
+            border: 1px solid #475569; /* slate-600 */
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+        .gemini-button {
+            background-color: #F97316; /* orange-500 */
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+        .gemini-button:hover {
+            background-color: #EA580C; /* orange-600 */
+        }
+        .gemini-output {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: #334155; /* slate-700 */
+            border-radius: 0.375rem;
+            color: #CBD5E1; /* slate-300 */
+            font-size: 0.9rem;
+            white-space: pre-wrap; /* To preserve formatting from LLM */
+        }
+        .loading-spinner {
+            border: 4px solid #FDBA74; /* orange-300 */
+            border-top: 4px solid #F97316; /* orange-500 */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0.5rem auto;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-sticky">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center space-x-2 md:space-x-4">
+                <a href="#hero" class="nav-link">Home</a>
+                <a href="#coaching" class="nav-link">Coaching KPIs</a>
+                <a href="#automation-costs" class="nav-link">Automation Costs</a>
+                <a href="#pricing-models" class="nav-link">Pricing Models</a>
+                <a href="#tiered-packages" class="nav-link">Service Tiers</a>
+                <a href="#recommendations" class="nav-link">Strategies</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero" class="hero-section py-12 md:py-20 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-slate-100">Strategic AI Consulting for SMB Success</h1>
+            <p class="text-xl md:text-2xl mb-8 text-slate-300">Navigating Your AI Journey: Insights for Boutique Consultancies Serving Small & Mid-size Businesses</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-6 py-8">
+
+        <section id="coaching" class="py-12">
+            <h2 class="section-title">AI Executive Coaching: Unlocking SMB Potential</h2>
+            <p class="section-intro">Effective AI executive coaching is pivotal for SMB leaders to understand AI's strategic implications, drive adoption, and achieve tangible business improvements. Success is measured across key performance areas.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-10">
+                <div class="kpi-card text-center">
+                    <h3 class="card-title">Business Performance & ROI</h3>
+                    <p class="card-text mb-4">Coaching directly impacts revenue growth, cost savings, and productivity. A key metric is Return on Coaching Investment (ROCI).</p>
+                    <div class="chart-container mx-auto h-64 md:h-72">
+                        <canvas id="rociChart"></canvas>
+                    </div>
+                    <p class="card-text mt-3 font-semibold">Focus: Maximize Financial & Operational Gains</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="card-title">AI Adoption & Integration</h3>
+                    <p class="card-text mb-4">Measures the practical application of AI knowledge, including AI literacy uplift, tool adoption, and AI-driven initiatives launched.</p>
+                     <div class="chart-container mx-auto h-64 md:h-72">
+                        <canvas id="adoptionChart"></canvas>
+                    </div>
+                    <p class="card-text mt-3 font-semibold">Focus: Embed AI Strategically</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="card-title">Leadership Capability</h3>
+                    <p class="card-text mb-4">Assesses growth in strategic thinking, decision-making quality, and confidence in leading AI projects and fostering an AI-receptive culture.</p>
+                     <div class="chart-container mx-auto h-64 md:h-72">
+                        <canvas id="leadershipChart"></canvas>
+                    </div>
+                    <p class="card-text mt-3 font-semibold">Focus: Develop AI Champions</p>
+                </div>
+            </div>
+            <div class="kpi-card text-center md:col-span-3">
+                <p class="text-2xl secondary-text mb-2">Significant Impact:</p>
+                <p class="stat-big">Up to 788%</p>
+                <p class="text-xl primary-text font-semibold">Return on Coaching Investment (ROCI) Reported</p>
+                <p class="card-text mt-2">This highlights the substantial financial returns SMBs can achieve through targeted AI executive coaching, driven by productivity gains and strategic AI implementation.</p>
+            </div>
+        </section>
+
+        <section id="automation-costs" class="py-12 bg-slate-950 rounded-lg my-12">
+            <h2 class="section-title">Decoding AI Automation Costs for SMBs</h2>
+            <p class="section-intro">For SMBs, a clear understanding of both the initial investment and ongoing operational expenses of AI automation is crucial for effective budgeting and ROI assessment.</p>
+            <div class="kpi-card md:col-span-2">
+                <h3 class="card-title text-center mb-6">AI Automation: Initial Build vs. Ongoing Operational Costs</h3>
+                <div class="chart-container mx-auto" style="height: 400px; max-height:450px;">
+                    <canvas id="automationCostChart"></canvas>
+                </div>
+                <div class="mt-6 grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold primary-text mb-2">Key Initial Build Costs:</h4>
+                        <ul class="list-disc list-inside card-text space-y-1">
+                            <li>Custom Model Development: $50k - $1M+</li>
+                            <li>Platform/Tool Licensing & Integration</li>
+                            <li>Data Acquisition & Preparation: $10k+</li>
+                            <li>Infrastructure Setup (Cloud/On-premise)</li>
+                            <li>Skilled Talent/Developer Costs</li>
+                            <li>Testing & Quality Assurance</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold primary-text mb-2">Key Ongoing Operational Costs:</h4>
+                        <ul class="list-disc list-inside card-text space-y-1">
+                            <li>API Usage Fees (e.g., GPT-4 $0.03/1k tokens)</li>
+                            <li>Cloud Infrastructure: $1k - $5k+/month</li>
+                            <li>Model Retraining & Updates: ~20-25% of build cost/year</li>
+                            <li>Monitoring & Support: ~15-20% of build cost/year</li>
+                            <li>Software Licenses/Subscriptions</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="card-text mt-6 text-center">Understanding this comprehensive cost structure enables SMBs to make informed decisions and plan for sustained AI success. Initial projects for SMBs can range from $5,000-$30,000, while custom LLMs can exceed $100,000.</p>
+            </div>
+        </section>
+
+        <section id="pricing-models" class="py-12">
+            <h2 class="section-title">Smart Pricing for AI Automation Services</h2>
+            <p class="section-intro">Selecting the right pricing model is key to aligning the value of AI automation services with SMB budgets, expectations, and desired outcomes. Transparency and ROI focus are paramount.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="kpi-card">
+                    <h3 class="card-title">🚀 Project-Based Pricing</h3>
+                    <p class="card-text">A fixed fee for well-defined projects. Offers SMBs budget predictability. Ideal for clear scopes like AI strategy assessments ($5k-$25k) or standard tool deployments.</p>
+                </div>
+                <div class="kpi-card">
+                    <h3 class="card-title">📈 Value-Based Pricing</h3>
+                    <p class="card-text">Fees tied to the ROI or business value delivered (e.g., % of cost savings). Aligns consultant incentives with client success. Best for high-impact automation projects.</p>
+                </div>
+                <div class="kpi-card">
+                    <h3 class="card-title">🔄 Subscription/Retainer</h3>
+                    <p class="card-text">Recurring fees for ongoing management, support, and updates. Provides predictable costs for SMBs (e.g., advisory retainers $2k-$5k/month). Ensures continuous AI performance.</p>
+                </div>
+            </div>
+            <div class="kpi-card mt-10 text-center">
+                <h3 class="card-title">🏆 Recommended: The Hybrid Approach</h3>
+                <p class="card-text">Combining project-based fees for the initial build with a subscription/retainer for ongoing maintenance and support often provides the best balance. This offers clarity on upfront investment while ensuring predictable costs for long-term operation and optimization of AI solutions for SMBs.</p>
+            </div>
+        </section>
+
+        <section id="tiered-packages" class="py-12 bg-slate-950 rounded-lg my-12">
+            <h2 class="section-title">Tiered AI Consulting Packages for SMB Growth</h2>
+            <p class="section-intro">Offering structured service tiers helps SMBs choose solutions appropriate for their AI maturity, budget, and goals, creating a clear path from foundational understanding to transformative AI integration.</p>
+            <div class="flex flex-col md:flex-row items-stretch justify-around gap-6 md:gap-2">
+                <div class="kpi-card tier-card flex-1 max-w-md flex flex-col">
+                    <h3 class="card-title text-center highlight-text">Tier 1: AI Foundation</h3>
+                    <p class="card-text mb-2"><strong>Ideal for:</strong> SMBs new to AI, exploring potential, limited budget (&lt;$2M revenue).</p>
+                    <p class="card-text mb-2"><strong>Services:</strong> AI Readiness Assessment, Intro Executive Workshop, Use Case ID, Basic Roadmap.</p>
+                    <p class="card-text font-semibold"><strong>Price Range:</strong> $2,500 - $7,500 (Fixed Package)</p>
+                    <p class="card-text mt-2 mb-4 flex-grow"><strong>Value:</strong> Demystifies AI, identifies quick wins, provides a clear starting point.</p>
+                    <div class="mt-auto">
+                        <input type="text" id="industryInput" class="gemini-input" placeholder="Enter your industry (e.g., Retail)">
+                        <button id="generateIdeasButton" class="gemini-button">✨ Generate AI Use Case Ideas</button>
+                        <div id="loadingSpinner" class="loading-spinner"></div>
+                        <div id="ideasOutput" class="gemini-output" style="display: none;"></div>
+                    </div>
+                </div>
+                <span class="flow-arrow self-center md:mt-0 mt-4">➡️</span>
+                <div class="kpi-card tier-card flex-1 max-w-md flex flex-col">
+                    <h3 class="card-title text-center highlight-text">Tier 2: AI Growth Engine</h3>
+                    <p class="card-text mb-2"><strong>Ideal for:</strong> SMBs ready for first major AI solution, specific need identified ($1M-$10M revenue).</p>
+                    <p class="card-text mb-2"><strong>Services:</strong> Targeted Coaching, Single Solution Implementation (e.g., AI-CRM), Basic Team Training.</p>
+                    <p class="card-text font-semibold"><strong>Price Range:</strong> $10,000 - $40,000 (Project) + Coaching</p>
+                    <p class="card-text mt-2 flex-grow"><strong>Value:</strong> Launches tangible AI solution, builds capability, demonstrates ROI.</p>
+                </div>
+                <span class="flow-arrow self-center md:mt-0 mt-4">➡️</span>
+                <div class="kpi-card tier-card flex-1 max-w-md flex flex-col">
+                    <h3 class="card-title text-center highlight-text">Tier 3: AI Transformation Partnership</h3>
+                    <p class="card-text mb-2"><strong>Ideal for:</strong> SMBs committed to AI as a strategic driver, seeking ongoing innovation ($5M+ revenue).</p>
+                    <p class="card-text mb-2"><strong>Services:</strong> Ongoing Coaching, Custom Automations, Advanced Training, AI Governance.</p>
+                    <p class="card-text font-semibold"><strong>Price Range:</strong> $5,000 - $15,000+/month (Retainer)</p>
+                    <p class="card-text mt-2 flex-grow"><strong>Value:</strong> Long-term strategic partner, drives continuous innovation and competitive advantage.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendations" class="py-12">
+            <h2 class="section-title">Strategic Pillars for Your AI Consulting Practice</h2>
+            <p class="section-intro">To succeed as a boutique AI consultancy serving SMBs, focus on these key strategies to build trust, deliver value, and foster long-term partnerships.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="kpi-card text-center">
+                    <div class="text-5xl mb-4">🎓</div>
+                    <h3 class="card-title">Emphasize Education</h3>
+                    <p class="card-text">Position as an educational partner. Demystify AI and empower SMBs with AI literacy for informed decision-making.</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <div class="text-5xl mb-4">📊</div>
+                    <h3 class="card-title">Prioritize ROI & Transparency</h3>
+                    <p class="card-text">Be transparent in costs and scope. Collaboratively define success metrics and consistently demonstrate return on investment.</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <div class="text-5xl mb-4">💡</div>
+                    <h3 class="card-title">Leverage Boutique Advantage</h3>
+                    <p class="card-text">Highlight agility, personalized service, and specialized expertise. Adapt quickly to client needs and market changes.</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <div class="text-5xl mb-4">🤝</div>
+                    <h3 class="card-title">Define Clear SLAs</h3>
+                    <p class="card-text">For ongoing services, establish Service Level Agreements for availability, response, and resolution to ensure reliability and accountability.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-section text-slate-300 py-8 text-center">
+        <div class="container mx-auto px-6">
+            <p class="mb-2">&copy; 2025 AI Consulting Insights. All rights reserved.</p>
+            <p class="text-sm text-slate-400">This infographic provides a strategic overview based on the "Strategic Framework for AI Consulting Services" report. For detailed information, refer to the full report.</p>
+        </div>
+    </footer>
+
+    <script>
+        const processLabel = (label, maxLength = 16) => {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            let currentLine = '';
+            const lines = [];
+            for (const word of words) {
+                if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            if (currentLine.trim().length > 0) {
+                lines.push(currentLine.trim());
+            }
+            return lines;
+        };
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#CBD5E1', 
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: { title: tooltipTitleCallback },
+                    backgroundColor: '#0F172A', 
+                    titleColor: '#F97316',    
+                    bodyColor: '#FDBA74',     
+                    padding: 10,
+                    cornerRadius: 4
+                }
+            }
+        };
+        
+        const commonPieChartOptions = {
+            ...commonChartOptions,
+             cutout: '60%',
+        };
+
+        const rociData = {
+            labels: [processLabel('Productivity Gains'), processLabel('Strategic Alignment'), processLabel('Cost Savings')],
+            datasets: [{
+                label: 'Impact on ROCI',
+                data: [50, 30, 20],
+                backgroundColor: ['#F97316', '#FB923C', '#FDBA74'], 
+                borderColor: '#1E293B', 
+                borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('rociChart'), { type: 'doughnut', data: rociData, options: commonPieChartOptions });
+
+        const adoptionData = {
+            labels: [processLabel('AI Literacy Uplift'), processLabel('New Tool Adoption'), processLabel('AI Initiatives Launched')],
+            datasets: [{
+                label: 'AI Adoption Metrics',
+                data: [40, 35, 25],
+                backgroundColor: ['#F97316', '#FB923C', '#FDBA74'], 
+                borderColor: '#1E293B', 
+                borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('adoptionChart'), { type: 'doughnut', data: adoptionData, options: commonPieChartOptions });
+
+        const leadershipData = {
+            labels: [processLabel('Strategic Thinking'), processLabel('Decision Quality'), processLabel('Confidence Boost')],
+            datasets: [{
+                label: 'Leadership Capability Growth',
+                data: [45, 30, 25],
+                backgroundColor: ['#F97316', '#FB923C', '#FDBA74'], 
+                borderColor: '#1E293B', 
+                borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('leadershipChart'), { type: 'doughnut', data: leadershipData, options: commonPieChartOptions });
+        
+        const automationCostData = {
+            labels: [processLabel('Simpler Integration / Off-the-shelf tool'), processLabel('Mid-Complexity Custom Solution'), processLabel('Advanced Custom LLM / AI System')],
+            datasets: [
+                {
+                    label: 'Initial Build Cost (Illustrative Low End)',
+                    data: [5000, 30000, 100000],
+                    backgroundColor: '#F97316', 
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Initial Build Cost (Illustrative High End)',
+                    data: [15000, 70000, 900000], 
+                    backgroundColor: '#EA580C', 
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Annual Ongoing Cost (Illustrative Low End)',
+                    data: [12000, 36000, 60000], 
+                    backgroundColor: '#FB923C', 
+                    stack: 'Stack 1',
+                },
+                 {
+                    label: 'Annual Ongoing Cost (Illustrative High End)',
+                    data: [60000, 120000, 240000], 
+                    backgroundColor: '#FDBA74', 
+                    stack: 'Stack 1',
+                }
+            ]
+        };
+        new Chart(document.getElementById('automationCostChart'), {
+            type: 'bar',
+            data: automationCostData,
+            options: {
+                ...commonChartOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Cost (USD)', color: '#CBD5E1' }, 
+                        ticks: { 
+                            color: '#94A3B8', 
+                            callback: function(value) {
+                                if (value >= 1000000) return (value / 1000000) + 'M';
+                                if (value >= 1000) return (value / 1000) + 'k';
+                                return value;
+                            }
+                        },
+                        grid: { color: '#334155' } 
+                    },
+                    x: { 
+                        ticks: { color: '#94A3B8' }, 
+                        grid: { color: '#334155' } 
+                    }
+                },
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    tooltip: {
+                        ...commonChartOptions.plugins.tooltip,
+                        mode: 'index',
+                        intersect: false,
+                         callbacks: {
+                            ...commonChartOptions.plugins.tooltip.callbacks,
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits:0, maximumFractionDigits:0 }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - (document.querySelector('.nav-sticky')?.offsetHeight || 0);
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        const industryInput = document.getElementById('industryInput');
+        const generateIdeasButton = document.getElementById('generateIdeasButton');
+        const ideasOutput = document.getElementById('ideasOutput');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        generateIdeasButton.addEventListener('click', async () => {
+            const industry = industryInput.value.trim();
+            if (!industry) {
+                ideasOutput.textContent = 'Please enter an industry or business type.';
+                ideasOutput.style.display = 'block';
+                return;
+            }
+
+            ideasOutput.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+            generateIdeasButton.disabled = true;
+
+            const prompt = `Generate 3 concise and actionable AI use case ideas specifically for a small to mid-sized business (SMB) in the "${industry}" sector. Focus on practical, foundational applications or quick wins that an SMB could implement. Present each idea as a bullet point with a brief explanation.`;
+            
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    ideasOutput.textContent = 'Error generating ideas. Please check the console for details.';
+                    if (errorData && errorData.error && errorData.error.message) {
+                         ideasOutput.textContent = `Error: ${errorData.error.message.substring(0,1000)}`; // Show snippet of error
+                    }
+                } else {
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        ideasOutput.textContent = text;
+                    } else {
+                        ideasOutput.textContent = 'No ideas generated or unexpected response structure.';
+                    }
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                ideasOutput.textContent = 'Failed to fetch ideas. Check your network connection or API key setup.';
+            } finally {
+                loadingSpinner.style.display = 'none';
+                ideasOutput.style.display = 'block';
+                generateIdeasButton.disabled = false;
+            }
+        });
+
+    </script>
+</body>
+</html>
