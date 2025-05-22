@@ -19,21 +19,21 @@
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 350px;
+            height: 250px;
+            max-height: 300px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 350px;
-                max-height: 400px;
+                height: 300px;
+                max-height: 350px;
             }
         }
         .kpi-card {
             background-color: #1E293B; /* bg-slate-800 */
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
             transition: transform 0.3s ease;
         }
         .kpi-card:hover {
@@ -51,6 +51,11 @@
             margin-bottom: 1rem;
             text-align: center;
         }
+        @media (max-width: 639px) { /* Smaller than Tailwind sm breakpoint */
+            .section-title {
+                font-size: 1.75rem; /* Approx 28px */
+            }
+        }
         .section-intro {
             font-size: 1.125rem;
             color: #FB923C; /* text-orange-400 */
@@ -58,13 +63,13 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
         .card-title {
             font-size: 1.5rem;
             font-weight: 600;
             color: #F97316; /* text-orange-500 */
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
         .card-text {
             color: #CBD5E1; /* text-slate-300 */
@@ -96,7 +101,7 @@
             backdrop-filter: blur(10px);
             padding: 0.75rem 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .nav-link {
             color: #FB923C; /* text-orange-400 */
@@ -122,7 +127,7 @@
             border-radius: 0.375rem;
             padding: 0.5rem 0.75rem;
             width: 100%;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
         .gemini-button {
             background-color: #F97316; /* orange-500 */
@@ -138,7 +143,7 @@
             background-color: #EA580C; /* orange-600 */
         }
         .gemini-output {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
             padding: 0.75rem;
             background-color: #334155; /* slate-700 */
             border-radius: 0.375rem;
@@ -166,7 +171,7 @@
 
     <nav class="nav-sticky">
         <div class="container mx-auto px-4">
-            <div class="flex flex-wrap justify-center space-x-2 md:space-x-4">
+            <div class="flex flex-wrap justify-center space-x-1 md:space-x-4">
                 <a href="#hero" class="nav-link">Home</a>
                 <a href="#coaching" class="nav-link">Coaching KPIs</a>
                 <a href="#automation-costs" class="nav-link">Automation Costs</a>
@@ -177,43 +182,43 @@
         </div>
     </nav>
 
-    <header id="hero" class="hero-section py-12 md:py-20 text-white">
+    <header id="hero" class="hero-section py-10 md:py-16 text-white">
         <div class="container mx-auto px-6 text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-slate-100">Strategic AI Consulting for SMB Success</h1>
             <p class="text-xl md:text-2xl mb-8 text-slate-300">Navigating Your AI Journey: Insights for Boutique Consultancies Serving Small & Mid-size Businesses</p>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 md:px-6 py-8">
+    <main class="container mx-auto px-4 md:px-6 py-6">
 
-        <section id="coaching" class="py-12">
+        <section id="coaching" class="py-8">
             <h2 class="section-title">AI Executive Coaching: Unlocking SMB Potential</h2>
             <p class="section-intro">Effective AI executive coaching is pivotal for SMB leaders to understand AI's strategic implications, drive adoption, and achieve tangible business improvements. Success is measured across key performance areas.</p>
             
-            <div class="grid md:grid-cols-3 gap-8 mb-10">
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
                 <div class="kpi-card text-center">
                     <h3 class="card-title">Business Performance & ROI</h3>
-                    <p class="card-text mb-4">Coaching directly impacts revenue growth, cost savings, and productivity. A key metric is Return on Coaching Investment (ROCI).</p>
-                    <div class="chart-container mx-auto h-64 md:h-72">
+                    <p class="card-text mb-3">Coaching directly impacts revenue growth, cost savings, and productivity. A key metric is Return on Coaching Investment (ROCI).</p>
+                    <div class="chart-container mx-auto h-56 md:h-64">
                         <canvas id="rociChart"></canvas>
                     </div>
-                    <p class="card-text mt-3 font-semibold">Focus: Maximize Financial & Operational Gains</p>
+                    <p class="card-text mt-2 font-semibold">Focus: Maximize Financial & Operational Gains</p>
                 </div>
                 <div class="kpi-card text-center">
                     <h3 class="card-title">AI Adoption & Integration</h3>
-                    <p class="card-text mb-4">Measures the practical application of AI knowledge, including AI literacy uplift, tool adoption, and AI-driven initiatives launched.</p>
-                     <div class="chart-container mx-auto h-64 md:h-72">
+                    <p class="card-text mb-3">Measures the practical application of AI knowledge, including AI literacy uplift, tool adoption, and AI-driven initiatives launched.</p>
+                     <div class="chart-container mx-auto h-56 md:h-64">
                         <canvas id="adoptionChart"></canvas>
                     </div>
-                    <p class="card-text mt-3 font-semibold">Focus: Embed AI Strategically</p>
+                    <p class="card-text mt-2 font-semibold">Focus: Embed AI Strategically</p>
                 </div>
                 <div class="kpi-card text-center">
                     <h3 class="card-title">Leadership Capability</h3>
-                    <p class="card-text mb-4">Assesses growth in strategic thinking, decision-making quality, and confidence in leading AI projects and fostering an AI-receptive culture.</p>
-                     <div class="chart-container mx-auto h-64 md:h-72">
+                    <p class="card-text mb-3">Assesses growth in strategic thinking, decision-making quality, and confidence in leading AI projects and fostering an AI-receptive culture.</p>
+                     <div class="chart-container mx-auto h-56 md:h-64">
                         <canvas id="leadershipChart"></canvas>
                     </div>
-                    <p class="card-text mt-3 font-semibold">Focus: Develop AI Champions</p>
+                    <p class="card-text mt-2 font-semibold">Focus: Develop AI Champions</p>
                 </div>
             </div>
             <div class="kpi-card text-center md:col-span-3">
@@ -224,15 +229,15 @@
             </div>
         </section>
 
-        <section id="automation-costs" class="py-12 bg-slate-950 rounded-lg my-12">
+        <section id="automation-costs" class="py-8 bg-slate-950 rounded-lg my-8">
             <h2 class="section-title">Decoding AI Automation Costs for SMBs</h2>
             <p class="section-intro">For SMBs, a clear understanding of both the initial investment and ongoing operational expenses of AI automation is crucial for effective budgeting and ROI assessment.</p>
             <div class="kpi-card md:col-span-2">
-                <h3 class="card-title text-center mb-6">AI Automation: Initial Build vs. Ongoing Operational Costs</h3>
-                <div class="chart-container mx-auto" style="height: 400px; max-height:450px;">
+                <h3 class="card-title text-center mb-4">AI Automation: Initial Build vs. Ongoing Operational Costs</h3>
+                <div class="chart-container mx-auto" style="height: 350px; max-height:400px;">
                     <canvas id="automationCostChart"></canvas>
                 </div>
-                <div class="mt-6 grid md:grid-cols-2 gap-6">
+                <div class="mt-4 grid md:grid-cols-2 gap-4">
                     <div>
                         <h4 class="text-lg font-semibold primary-text mb-2">Key Initial Build Costs:</h4>
                         <ul class="list-disc list-inside card-text space-y-1">
@@ -255,14 +260,14 @@
                         </ul>
                     </div>
                 </div>
-                <p class="card-text mt-6 text-center">Understanding this comprehensive cost structure enables SMBs to make informed decisions and plan for sustained AI success. Initial projects for SMBs can range from $5,000-$30,000, while custom LLMs can exceed $100,000.</p>
+                <p class="card-text mt-4 text-center">Understanding this comprehensive cost structure enables SMBs to make informed decisions and plan for sustained AI success. Initial projects for SMBs can range from $5,000-$30,000, while custom LLMs can exceed $100,000.</p>
             </div>
         </section>
 
-        <section id="pricing-models" class="py-12">
+        <section id="pricing-models" class="py-8">
             <h2 class="section-title">Smart Pricing for AI Automation Services</h2>
             <p class="section-intro">Selecting the right pricing model is key to aligning the value of AI automation services with SMB budgets, expectations, and desired outcomes. Transparency and ROI focus are paramount.</p>
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-3 gap-6">
                 <div class="kpi-card">
                     <h3 class="card-title">🚀 Project-Based Pricing</h3>
                     <p class="card-text">A fixed fee for well-defined projects. Offers SMBs budget predictability. Ideal for clear scopes like AI strategy assessments ($5k-$25k) or standard tool deployments.</p>
@@ -276,16 +281,16 @@
                     <p class="card-text">Recurring fees for ongoing management, support, and updates. Provides predictable costs for SMBs (e.g., advisory retainers $2k-$5k/month). Ensures continuous AI performance.</p>
                 </div>
             </div>
-            <div class="kpi-card mt-10 text-center">
+            <div class="kpi-card mt-8 text-center">
                 <h3 class="card-title">🏆 Recommended: The Hybrid Approach</h3>
                 <p class="card-text">Combining project-based fees for the initial build with a subscription/retainer for ongoing maintenance and support often provides the best balance. This offers clarity on upfront investment while ensuring predictable costs for long-term operation and optimization of AI solutions for SMBs.</p>
             </div>
         </section>
 
-        <section id="tiered-packages" class="py-12 bg-slate-950 rounded-lg my-12">
+        <section id="tiered-packages" class="py-8 bg-slate-950 rounded-lg my-8">
             <h2 class="section-title">Tiered AI Consulting Packages for SMB Growth</h2>
             <p class="section-intro">Offering structured service tiers helps SMBs choose solutions appropriate for their AI maturity, budget, and goals, creating a clear path from foundational understanding to transformative AI integration.</p>
-            <div class="flex flex-col md:flex-row items-stretch justify-around gap-6 md:gap-2">
+            <div class="flex flex-col md:flex-row items-stretch justify-around gap-4 md:gap-2">
                 <div class="kpi-card tier-card flex-1 max-w-md flex flex-col">
                     <h3 class="card-title text-center highlight-text">Tier 1: AI Foundation</h3>
                     <p class="card-text mb-2"><strong>Ideal for:</strong> SMBs new to AI, exploring potential, limited budget (&lt;$2M revenue).</p>
@@ -318,27 +323,27 @@
             </div>
         </section>
 
-        <section id="recommendations" class="py-12">
+        <section id="recommendations" class="py-8">
             <h2 class="section-title">Strategic Pillars for Your AI Consulting Practice</h2>
             <p class="section-intro">To succeed as a boutique AI consultancy serving SMBs, focus on these key strategies to build trust, deliver value, and foster long-term partnerships.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="kpi-card text-center">
-                    <div class="text-5xl mb-4">🎓</div>
+                    <div class="text-5xl mb-3">🎓</div>
                     <h3 class="card-title">Emphasize Education</h3>
                     <p class="card-text">Position as an educational partner. Demystify AI and empower SMBs with AI literacy for informed decision-making.</p>
                 </div>
                 <div class="kpi-card text-center">
-                    <div class="text-5xl mb-4">📊</div>
+                    <div class="text-5xl mb-3">📊</div>
                     <h3 class="card-title">Prioritize ROI & Transparency</h3>
                     <p class="card-text">Be transparent in costs and scope. Collaboratively define success metrics and consistently demonstrate return on investment.</p>
                 </div>
                 <div class="kpi-card text-center">
-                    <div class="text-5xl mb-4">💡</div>
+                    <div class="text-5xl mb-3">💡</div>
                     <h3 class="card-title">Leverage Boutique Advantage</h3>
                     <p class="card-text">Highlight agility, personalized service, and specialized expertise. Adapt quickly to client needs and market changes.</p>
                 </div>
                 <div class="kpi-card text-center">
-                    <div class="text-5xl mb-4">🤝</div>
+                    <div class="text-5xl mb-3">🤝</div>
                     <h3 class="card-title">Define Clear SLAs</h3>
                     <p class="card-text">For ongoing services, establish Service Level Agreements for availability, response, and resolution to ensure reliability and accountability.</p>
                 </div>
@@ -346,7 +351,7 @@
         </section>
     </main>
 
-    <footer class="footer-section text-slate-300 py-8 text-center">
+    <footer class="footer-section text-slate-300 py-6 text-center">
         <div class="container mx-auto px-6">
             <p class="mb-2">&copy; 2025 AI Consulting Insights. All rights reserved.</p>
             <p class="text-sm text-slate-400">This infographic provides a strategic overview based on the "Strategic Framework for AI Consulting Services" report. For detailed information, refer to the full report.</p>
